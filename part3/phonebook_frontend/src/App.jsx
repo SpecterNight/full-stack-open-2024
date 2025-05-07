@@ -86,8 +86,15 @@ const App = () => {
     if (window.confirm(`Delete ${name} ?`)) {
       personService
         .deletePerson(id)
-        .then(deletedPerson => {
-          setPersons(persons.filter(person => person.id !== deletedPerson.id))
+        .then(() => {
+          setPersons(persons.filter(person => person.id !== id))
+          setNotification({
+            message: `Deleted ${name}`,
+            type: 'error'
+          })
+          setTimeout(()=>{
+            setNotification({message: null, type:'error'})
+          },5000)
         })
         .catch(error => {
           console.log(error)
