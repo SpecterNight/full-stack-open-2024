@@ -32,9 +32,9 @@ const App = () => {
           .then(returnedPerson => {
             setPersons(persons.map(person => person.id !== changedPerson.id ? person : returnedPerson))
           })
-          .catch(error => {
+          .catch( error => {
             setNotification({
-              message: `Information of ${newName} has already been removed from server`,
+              message: `${error.response.data.error}`,
               type: 'error'
             }
             )

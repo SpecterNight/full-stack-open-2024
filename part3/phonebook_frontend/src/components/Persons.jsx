@@ -1,5 +1,3 @@
-import React from 'react'
-
 const Persons = ({ persons, searchValue, handleDelete }) => {
     
     const searchResult = searchValue.length > 0 
