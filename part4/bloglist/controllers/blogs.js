@@ -12,7 +12,7 @@ blogsRouter.post('/', userExtractor, async (request, response) => {
 
   const user = request.user
 
-  if (!body.title || !body.url){
+  if (!body?.title || !body?.url){
     return response.status(400).json({ error: 'title or url missing' })
   }
 
