@@ -3,7 +3,10 @@ const Blog = require('../models/blog')
 const { userExtractor } = require('../utils/middleware')
 
 blogsRouter.get('/', async (request, response) => {
-  const blogs = await Blog.find({})
+  const blogs = await Blog
+    .find({})
+    .populate('user', { username: 1, name: 1 })
+
   response.json(blogs)
 })
 
@@ -43,23 +46,16 @@ blogsRouter.delete('/:id', userExtractor, async (request, response) => {
   response.status(404).json({ error: 'user invalid' })
 })
 
-blogsRouter.put('/:id', userExtractor, async (request, response) => {
-  const newBlogData = request.body
+blogsRouter.put('/:id', async (request, response) => {
+  const { likes, author, url, title } = request.body
 
-  const user = request.user
+  const updatedBlog = await Blog.findByIdAndUpdate(
+    request.params.id,
+    { likes, author, url, title },
+    { new: true }
+  ).populate('user', { username: 1, name: 1 })
 
-  const blog = await Blog.findById(request.params.id)
-
-  if( blog.user.toString() === user._id.toString()){
-    const updatedBlog = await Blog.findByIdAndUpdate(
-      request.params.id,
-      newBlogData,
-      { new: true }
-    )
-    return response.status(201).json(updatedBlog)
-  }
-
-  response.status(404).json({ error: 'user invalid' })
+  response.json(updatedBlog)
 })
 
 module.exports = blogsRouter
